@@ -57,6 +57,8 @@ Try using the ClusterIP/Cluster Service instead and port 8080.
 `inactivity_duration` - i.e. `10m` (Golang duration)
 `reconcile_interval` - i.e. `30s` (default value)
 `write_debug` - default `false`, set to `true` to enable verbose logging for debugging / troubleshooting
+`basic_auth_user` - dev only, gateway user
+`basic_auth_password` - dev only, gateway password
 
 * Command-line args
 

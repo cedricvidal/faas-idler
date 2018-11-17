@@ -48,14 +48,14 @@ func main() {
 
 	credentials := Credentials{}
 
-	val, err := readFile("/var/secrets/basic-auth-user")
+	val, err := readSecret("basic-auth-user")
 	if err == nil {
 		credentials.Username = val
 	} else {
 		log.Printf("Unable to read username: %s", err)
 	}
 
-	passwordVal, passErr := readFile("/var/secrets/basic-auth-password")
+	passwordVal, passErr := readSecret("basic-auth-password")
 	if passErr == nil {
 		credentials.Password = passwordVal
 	} else {
@@ -87,10 +87,14 @@ inactivity_duration: %s `, dryRun, config.GatewayURL, config.InactivityDuration)
 	}
 }
 
-func readFile(path string) (string, error) {
+func readSecret(name string) (string, error) {
+	var path = "/var/secrets/" + name
 	if _, err := os.Stat(path); err == nil {
 		data, readErr := ioutil.ReadFile(path)
 		return strings.TrimSpace(string(data)), readErr
+	}
+	if val, ok := os.LookupEnv(strings.Replace(name, "-", "_", -1)); ok {
+		return val, nil
 	}
 	return "", nil
 }
